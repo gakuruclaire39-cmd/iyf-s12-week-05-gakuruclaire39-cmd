@@ -1,3 +1,4 @@
+// DOM Elements
 const form = document.getElementById("todo-form");
 const input = document.getElementById("todo-input");
 const todoList = document.getElementById("todo-list");
@@ -5,66 +6,148 @@ const itemsLeft = document.getElementById("items-left");
 const filters = document.querySelectorAll(".filter");
 const clearCompletedBtn = document.getElementById("clear-completed");
 
-let todos = JSON.parse(localStorage.getItem("todos") || "[]");
+// State
+let todos = [];
 let currentFilter = "all";
 
-function save(){ localStorage.setItem("todos", JSON.stringify(todos)); }
-function createTodoElement(todo){
-  const li = document.createElement("li");
-  li.className = `todo-item ${todo.completed ? "completed" : ""}`;
-  li.dataset.id = todo.id;
-  li.innerHTML = `<label><input type="checkbox" ${todo.completed?"checked":""}><span>${todo.text}</span></label><button class="delete">×</button>`;
-  return li;
+// Functions
+function createTodoElement(todo) {
+    const li = document.createElement("li");
+    li.dataset.id = todo.id;
+    li.className = `todo-item ${todo.completed ? "completed" : ""}`;
+    li.style.cssText = "display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #eee;";
+    if (todo.completed) li.style.textDecoration = "line-through";
+    
+    const span = document.createElement("span");
+    span.className = "todo-text";
+    span.textContent = todo.text;
+    span.style.cursor = "pointer";
+    span.style.flex = "1";
+    
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "delete-btn";
+    deleteBtn.textContent = "×";
+    deleteBtn.style.cssText = "background:red;color:white;border:none;border-radius:50%;cursor:pointer;";
+    
+    li.appendChild(span);
+    li.appendChild(deleteBtn);
+    
+    // Bonus: Double-click to edit
+    span.addEventListener("dblclick", () => {
+        const newText = prompt("Edit task:", todo.text);
+        if (newText !== null && newText.trim() !== "") {
+            todo.text = newText.trim();
+            renderTodos();
+            console.log("Edited todo:", todo.id);
+        }
+    });
+    
+    return li;
 }
-function renderTodos(){
-  todoList.innerHTML = "";
-  const filtered = todos.filter(t => currentFilter==="active" ? !t.completed : currentFilter==="completed" ? t.completed : true);
-  filtered.forEach(todo => todoList.appendChild(createTodoElement(todo)));
-  updateStats();
+
+function renderTodos() {
+    todoList.innerHTML = "";
+    
+    let filtered = todos;
+    if (currentFilter === "active") filtered = todos.filter(t => !t.completed);
+    if (currentFilter === "completed") filtered = todos.filter(t => t.completed);
+    
+    filtered.forEach(todo => {
+        todoList.appendChild(createTodoElement(todo));
+    });
+    
+    updateStats();
+    console.log(`Rendered ${filtered.length} todos (filter: ${currentFilter})`);
 }
-function addTodo(text){
-  todos.push({id:Date.now(), text, completed:false});
-  save(); renderTodos();
+
+function addTodo(text) {
+    if (!text.trim()) {
+        console.log("Empty task not allowed");
+        return;
+    }
+    const todo = {
+        id: Date.now(),
+        text: text.trim(),
+        completed: false
+    };
+    todos.push(todo);
+    renderTodos();
+    console.log("Added todo:", text);
 }
-function toggleTodo(id){ const t=todos.find(x=>x.id==id); if(t){t.completed=!t.completed; save(); renderTodos();} }
-function deleteTodo(id){ todos=todos.filter(x=>x.id!=id); save(); renderTodos(); }
-function updateStats(){ const left=todos.filter(t=>!t.completed).length; itemsLeft.textContent=`${left} items left`; }
 
-form.addEventListener("submit", e=>{
-  e.preventDefault();
-  const text=input.value.trim();
-  if(!text) return;
-  addTodo(text); input.value="";
+function toggleTodo(id) {
+    const todo = todos.find(t => t.id === id);
+    if (todo) {
+        todo.completed = !todo.completed;
+        renderTodos();
+        console.log("Toggled todo:", id, todo.completed);
+    }
+}
+
+function deleteTodo(id) {
+    todos = todos.filter(t => t.id !== id);
+    renderTodos();
+    console.log("Deleted todo:", id);
+}
+
+function updateStats() {
+    const activeCount = todos.filter(t => !t.completed).length;
+    itemsLeft.textContent = `${activeCount} items left`;
+}
+
+function filterTodos(filter) {
+    currentFilter = filter;
+    filters.forEach(f => f.classList.toggle("active", f.dataset.filter === filter));
+    renderTodos();
+    console.log("Filter set to:", filter);
+}
+
+// Event Listeners
+form.addEventListener("submit", function(event) {
+    event.preventDefault();
+    addTodo(input.value);
+    input.value = "";
+    input.focus();
 });
 
-todoList.addEventListener("click", e=>{
-  const li=e.target.closest("li");
-  if(!li) return;
-  if(e.target.matches("input[type=checkbox]")){ toggleTodo(li.dataset.id); }
-  if(e.target.classList.contains("delete")){ deleteTodo(li.dataset.id); }
-  if(e.target.matches("span")){ li.classList.toggle("completed"); toggleTodo(li.dataset.id); }
+// Delegation: ONE listener for all todo actions
+todoList.addEventListener("click", function(event) {
+    const li = event.target.closest("li");
+    if (!li) return;
+    const id = Number(li.dataset.id);
+    
+    if (event.target.classList.contains("delete-btn")) {
+        deleteTodo(id);
+    } else {
+        toggleTodo(id);
+    }
 });
 
-// Bonus: Double-click to edit
-todoList.addEventListener("dblclick", e=>{
-  if(!e.target.matches("span")) return;
-  const li=e.target.closest("li");
-  const id=li.dataset.id;
-  const todo=todos.find(t=>t.id==id);
-  const newText=prompt("Edit task:", todo.text);
-  if(newText!==null){ const trimmed=newText.trim(); if(trimmed){todo.text=trimmed; save(); renderTodos();} }
+// Filters
+filters.forEach(filterBtn => {
+    filterBtn.addEventListener("click", () => {
+        filterTodos(filterBtn.dataset.filter);
+    });
 });
 
-filters.forEach(btn=> btn.addEventListener("click", ()=>{
-  filters.forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  currentFilter=btn.dataset.filter;
-  renderTodos();
-}));
-
-clearCompletedBtn.addEventListener("click", ()=>{
-  todos=todos.filter(t=>!t.completed);
-  save(); renderTodos();
+// Clear Completed
+clearCompletedBtn.addEventListener("click", () => {
+    todos = todos.filter(t => !t.completed);
+    renderTodos();
+    console.log("Cleared completed");
 });
 
+// Keyboard: Escape clears input
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+        input.value = "";
+        console.log("Escape - cleared input");
+    }
+});
+
+// Initialize with demo data
+addTodo("Learn DOM manipulation");
+addTodo("Practice event delegation");
 renderTodos();
+
+console.log("===== MINI-PROJECT: To-Do List COMPLETE =====");
