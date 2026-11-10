@@ -195,3 +195,68 @@ function addNavItem(text, href) {
 
 addNavItem("Blog", "/blog");
 addNavItem("Portfolio", "/portfolio");
+
+// ===== TASK 10.1: Event Listeners =====
+
+// Exercise 1: Basic Events
+const button = document.createElement("button");
+button.textContent = "Click Me (10.1)";
+document.body.appendChild(button);
+
+button.addEventListener("click", function() {
+    console.log("Task 10.1 - Button clicked! (anonymous)");
+});
+
+button.addEventListener("click", () => {
+    console.log("Task 10.1 - Clicked again! (arrow)");
+});
+
+function handleClick() {
+    console.log("Task 10.1 - Handled! (named)");
+}
+button.addEventListener("click", handleClick);
+button.removeEventListener("click", handleClick);
+console.log("Task 10.1 - Added and removed handleClick");
+
+// Exercise 2: Event Types demo
+const demoInput = document.createElement("input");
+demoInput.placeholder = "Type here for keyboard events";
+document.body.appendChild(demoInput);
+
+demoInput.addEventListener("keydown", (e) => console.log("keydown:", e.key));
+demoInput.addEventListener("keyup", () => console.log("keyup"));
+demoInput.addEventListener("focus", () => console.log("focus event"));
+demoInput.addEventListener("blur", () => console.log("blur event"));
+demoInput.addEventListener("input", (e) => console.log("input:", e.target.value));
+
+// Build: Click Counter
+const counterDiv = document.createElement("div");
+counterDiv.style.margin = "20px 0";
+counterDiv.innerHTML = `
+    <h3>Click Counter (Task 10.1 Build)</h3>
+    <p>Count: <span id="count">0</span></p>
+    <button id="inc">+</button>
+    <button id="dec">-</button>
+    <button id="reset">Reset</button>
+`;
+document.body.appendChild(counterDiv);
+
+let count = 0;
+const countSpan = document.getElementById("count");
+document.getElementById("inc").addEventListener("click", () => {
+    count++;
+    countSpan.textContent = count;
+    console.log("Counter:", count);
+});
+document.getElementById("dec").addEventListener("click", () => {
+    if (count > 0) count--;
+    countSpan.textContent = count;
+    console.log("Counter:", count);
+});
+document.getElementById("reset").addEventListener("click", () => {
+    count = 0;
+    countSpan.textContent = count;
+    console.log("Counter reset");
+});
+
+console.log("Task 10.1 Complete - Click the buttons to test!");
