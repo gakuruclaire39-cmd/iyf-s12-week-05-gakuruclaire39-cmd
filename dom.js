@@ -305,3 +305,90 @@ document.addEventListener("keydown", function(event) {
 });
 
 console.log("Task 10.2 Complete - Click anywhere, press keys, try Ctrl+S, Esc, Ctrl+Enter");
+
+// ===== TASK 10.3 Exercise 1: Understanding Bubbling =====
+const bubblingDemo = document.createElement("div");
+bubblingDemo.innerHTML = `
+    <div id="grandparent" style="padding:20px; background:#fcc; margin:10px;">
+        Grandparent
+        <div id="parent" style="padding:20px; background:#cfc;">
+            Parent
+            <div id="child" style="padding:20px; background:#ccf;">
+                Child (click me)
+            </div>
+        </div>
+    </div>
+`;
+document.body.appendChild(bubblingDemo);
+
+document.getElementById("grandparent").addEventListener("click", () => {
+    console.log("Task 10.3 - Grandparent clicked (bubbling)");
+});
+document.getElementById("parent").addEventListener("click", () => {
+    console.log("Task 10.3 - Parent clicked (bubbling)");
+});
+document.getElementById("child").addEventListener("click", (e) => {
+    console.log("Task 10.3 - Child clicked (bubbling starts here)");
+    // e.stopPropagation(); // uncomment to stop bubbling
+});
+
+// ===== Exercise 2: Event Delegation + closest() =====
+console.log("Task 10.3 - Delegation: Using closest() for nested elements");
+
+// ===== Build: Delegated Task List =====
+const taskListBuild = document.createElement("div");
+taskListBuild.innerHTML = `
+    <h3>Build: Delegated Task List (Task 10.3)</h3>
+    <input id="new-task-input" placeholder="New task" />
+    <button id="add-task-btn">Add Task</button>
+    <ul id="task-list" style="list-style:none; padding:0;">
+        <li class="task-item">Learn DOM <button class="delete-btn">Delete</button></li>
+        <li class="task-item">Practice Events <button class="delete-btn">Delete</button></li>
+    </ul>
+`;
+document.body.appendChild(taskListBuild);
+
+const taskList = document.getElementById("task-list");
+const newTaskInput = document.getElementById("new-task-input");
+const addTaskBtn = document.getElementById("add-task-btn");
+
+// ONE listener on parent UL
+taskList.addEventListener("click", function(event) {
+    // Use closest() - handles if you click on span/button inside li
+    const taskItem = event.target.closest("li");
+    
+    // Delete button
+    if (event.target.classList.contains("delete-btn")) {
+        console.log("Task 10.3 - Delete:", taskItem.textContent);
+        taskItem.remove();
+        return;
+    }
+    
+    // Toggle completed
+    if (event.target.matches("li") || event.target.closest("li.task-item")) {
+        if (taskItem) {
+            taskItem.classList.toggle("completed");
+            taskItem.style.textDecoration = taskItem.classList.contains("completed") ? "line-through" : "none";
+            console.log("Task 10.3 - Toggled completed:", taskItem.textContent);
+        }
+    }
+});
+
+// Add new tasks - they AUTOMATICALLY work with delegation!
+function addTask() {
+    const text = newTaskInput.value.trim();
+    if (!text) return;
+    const li = document.createElement("li");
+    li.className = "task-item";
+    li.innerHTML = `${text} <button class="delete-btn">Delete</button>`;
+    taskList.appendChild(li);
+    console.log("Task 10.3 - Added task:", text);
+    newTaskInput.value = "";
+}
+addTaskBtn.addEventListener("click", addTask);
+newTaskInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") addTask();
+});
+
+console.log("===== WEEK 5 - ALL TASKS COMPLETE! =====");
+console.log("Test: Click Child box, click Tasks to toggle, click Delete, add new task");
