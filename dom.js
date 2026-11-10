@@ -87,3 +87,55 @@ console.log("Practice 4 - child li of ul:", ul.children);
 
 const footer = document.querySelector("footer");
 console.log("Practice 5 - from footer to body:", footer.parentElement);
+
+// ===== TASK 9.3: Modifying Content =====
+
+// Exercise 1: Text Content
+const h1 = document.querySelector("h1");
+console.log("Exercise 1 - textContent:", h1.textContent);
+console.log("Exercise 1 - innerText:", h1.innerText);
+// We READ it, we don't change it yet to keep page readable
+// h1.textContent = "New Title";
+
+// Exercise 2: HTML Content
+const articleTask = document.querySelector("article");
+console.log("Exercise 2 - innerHTML:", articleTask.innerHTML);
+
+// Security demo - SAFE version (commented, shows concept)
+const userInput = `<img src="x" onerror="alert('hacked!')">`;
+console.log("Danger of innerHTML with user input:", userInput);
+// articleTask.textContent = userInput; // Safe
+// articleTask.innerHTML = userInput; // Unsafe - don't do
+
+// Exercise 3: Attributes
+const link = document.querySelector(".nav-link");
+console.log("Exercise 3 - getAttribute href:", link.getAttribute("href"));
+console.log("Exercise 3 - property href:", link.href);
+link.setAttribute("href", "https://developer.mozilla.org");
+console.log("After setAttribute:", link.getAttribute("href"));
+console.log("hasAttribute target:", link.hasAttribute("target"));
+link.removeAttribute("target");
+
+// Data attributes demo
+// Create a test element to show dataset
+const testEl = document.createElement("div");
+testEl.setAttribute("data-id", "123");
+testEl.setAttribute("data-category", "tech");
+console.log("dataset.id:", testEl.dataset.id);
+console.log("dataset.category:", testEl.dataset.category);
+testEl.dataset.newAttr = "value";
+console.log("After adding dataset.newAttr:", testEl.outerHTML);
+
+// Exercise 4: Styles
+const container = document.querySelector(".container");
+container.style.backgroundColor = "#f0f0f0";
+container.style.padding = "30px";
+container.style.borderRadius = "8px";
+console.log("Exercise 4 - styles applied to .container");
+
+Object.assign(container.style, {
+    backgroundColor: "#333",
+    color: "white",
+    padding: "20px"
+});
+console.log("Exercise 4 - Object.assign styles applied");
