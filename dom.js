@@ -260,3 +260,48 @@ document.getElementById("reset").addEventListener("click", () => {
 });
 
 console.log("Task 10.1 Complete - Click the buttons to test!");
+
+// ===== TASK 10.2: The Event Object =====
+document.addEventListener("click", function(event) {
+    console.log("--- Task 10.2 Click Event Object ---");
+    console.log("Target:", event.target);
+    console.log("Current Target:", event.currentTarget);
+    console.log("Type:", event.type);
+    console.log("Position:", event.clientX, event.clientY);
+    // event.preventDefault(); // would block all clicks
+    // event.stopPropagation();
+});
+
+// Keyboard events - detailed
+document.addEventListener("keydown", function(event) {
+    console.log("--- Task 10.2 Keydown ---");
+    console.log("Key:", event.key);
+    console.log("Code:", event.code);
+    console.log("Shift:", event.shiftKey);
+    console.log("Ctrl:", event.ctrlKey);
+    console.log("Alt:", event.altKey);
+});
+
+// Build: Keyboard Shortcuts
+document.addEventListener("keydown", function(event) {
+    // Ctrl+S
+    if (event.ctrlKey && event.key === "s") {
+        event.preventDefault();
+        alert("Saved! (Ctrl+S)");
+        console.log("Task 10.2 Build - Ctrl+S -> Saved!");
+    }
+    // Escape: Clear all form inputs
+    if (event.key === "Escape") {
+        const inputs = document.querySelectorAll("input");
+        inputs.forEach(input => input.value = "");
+        console.log("Task 10.2 Build - Escape -> Cleared inputs");
+    }
+    // Ctrl+Enter: Submit form
+    if (event.ctrlKey && event.key === "Enter") {
+        console.log("Task 10.2 Build - Ctrl+Enter -> Submit form");
+        const form = document.querySelector("#contact-form");
+        if (form) form.dispatchEvent(new Event("submit"));
+    }
+});
+
+console.log("Task 10.2 Complete - Click anywhere, press keys, try Ctrl+S, Esc, Ctrl+Enter");
