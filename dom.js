@@ -397,7 +397,7 @@ const form10 = document.getElementById("contact-form");
 const nameInput10 = document.getElementById("name");
 const emailInput10 = document.getElementById("email");
 
-function showError(input, message) {
+function showError10(input, message) {
     input.classList.add("error");
     input.style.borderColor = "red";
     let errorEl = input.nextElementSibling;
@@ -412,7 +412,7 @@ function showError(input, message) {
     console.log(`Task 10.4 - Error on ${input.id}: ${message}`);
 }
 
-function clearError(input) {
+function clearError10(input) {
     input.classList.remove("error");
     input.style.borderColor = "green";
     let errorEl = input.nextElementSibling;
@@ -422,49 +422,46 @@ function clearError(input) {
     console.log(`Task 10.4 - Cleared error on ${input.id}`);
 }
 
-function showSuccess(message) {
+function showSuccess10(message) {
     console.log(`Task 10.4 - SUCCESS: ${message}`);
     alert(message);
 }
 
-function isValid(data) {
+function isValid10(data) {
     return data.name && data.name.length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email);
 }
 
-if (nameInput && emailInput && form) {
-    // Real-time validation
-    nameInput.addEventListener("input", function(event) {
+if (nameInput10 && emailInput10 && form10) {
+    nameInput10.addEventListener("input", function(event) {
         const value = event.target.value;
         if (value.length < 2) {
-            showError(nameInput, "Name must be at least 2 characters");
+            showError10(nameInput10, "Name must be at least 2 characters");
         } else {
-            clearError(nameInput);
+            clearError10(nameInput10);
         }
     });
 
-    emailInput.addEventListener("input", function(event) {
+    emailInput10.addEventListener("input", function(event) {
         const value = event.target.value;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value)) {
-            showError(emailInput, "Please enter a valid email");
+            showError10(emailInput10, "Please enter a valid email");
         } else {
-            clearError(emailInput);
+            clearError10(emailInput10);
         }
     });
 
-    // Form submission
-    form.addEventListener("submit", function(event) {
+    form10.addEventListener("submit", function(event) {
         event.preventDefault();
-        const formData = new FormData(form);
+        const formData = new FormData(form10);
         const data = Object.fromEntries(formData);
         console.log("Task 10.4 - Form data:", data);
         
-        if (isValid(data)) {
-            showSuccess("Form submitted successfully!");
-            form.reset();
-            // Clear borders
-            nameInput.style.borderColor = "";
-            emailInput.style.borderColor = "";
+        if (isValid10(data)) {
+            showSuccess10("Form submitted successfully!");
+            form10.reset();
+            nameInput10.style.borderColor = "";
+            emailInput10.style.borderColor = "";
         } else {
             console.log("Task 10.4 - Form invalid, not submitting");
         }
