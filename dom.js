@@ -470,3 +470,83 @@ if (nameInput10 && emailInput10 && form10) {
     console.log("Task 10.4 - Complete form validation added");
 }
 
+
+// ===== DAILY CHALLENGES WEEK 5 =====
+
+// Day 1: Color Changer 🟢
+const colorBtn = document.getElementById("color-btn");
+if (colorBtn) {
+    colorBtn.addEventListener("click", () => {
+        const randomColor = "#" + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+        document.querySelectorAll("h1,h2,h3").forEach(h => {
+            h.style.color = randomColor;
+        });
+        console.log("Day 1 - Changed headings to", randomColor);
+    });
+}
+
+// Day 2: Dynamic Element Creator 🟢
+let pCount = 0;
+const addParaBtn = document.getElementById("add-para-btn");
+const paraContainer = document.getElementById("para-container");
+if (addParaBtn && paraContainer) {
+    addParaBtn.addEventListener("click", () => {
+        pCount++;
+        const p = document.createElement("p");
+        p.textContent = `Paragraph ${pCount} `;
+        const del = document.createElement("button");
+        del.textContent = "Delete";
+        del.style.marginLeft = "10px";
+        del.addEventListener("click", () => p.remove());
+        p.appendChild(del);
+        paraContainer.appendChild(p);
+    });
+}
+
+// Day 3: Image Remover 🟢 - Toggle hide/show
+const removeImgBtn = document.getElementById("remove-img-btn");
+let imagesHidden = false;
+if (removeImgBtn) {
+    removeImgBtn.addEventListener("click", () => {
+        const imgs = document.querySelectorAll("img");
+        imgs.forEach(img => {
+            img.style.display = imagesHidden ? "" : "none";
+        });
+        imagesHidden = !imagesHidden;
+        removeImgBtn.textContent = imagesHidden ? "Show Images" : "Hide Images";
+    });
+}
+
+// Day 4: Content Copier 🟡
+const copyBtn = document.getElementById("copy-btn");
+const sourceDiv = document.getElementById("source");
+const targetDiv = document.getElementById("target");
+if (copyBtn && sourceDiv && targetDiv) {
+    copyBtn.addEventListener("click", () => {
+        targetDiv.innerHTML = sourceDiv.innerHTML;
+    });
+    // Bonus drag and drop
+    sourceDiv.draggable = true;
+    sourceDiv.addEventListener("dragstart", (e) => {
+        e.dataTransfer.setData("text/plain", sourceDiv.innerHTML);
+    });
+    targetDiv.addEventListener("dragover", (e) => e.preventDefault());
+    targetDiv.addEventListener("drop", (e) => {
+        e.preventDefault();
+        targetDiv.innerHTML = e.dataTransfer.getData("text/plain");
+    });
+}
+
+// Day 5: Dark Mode Toggle 🟡
+const darkBtn = document.getElementById("dark-mode-btn");
+if (darkBtn) {
+    if (localStorage.getItem("darkMode") === "true") {
+        document.body.classList.add("dark-mode");
+    }
+    darkBtn.addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+        localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
+    });
+}
+
+console.log("===== DAILY CHALLENGES - DONE =====");
