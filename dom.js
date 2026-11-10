@@ -393,9 +393,9 @@ newTaskInput.addEventListener("keydown", (e) => {
 console.log("Test: Click Child box, click Tasks to toggle, click Delete, add new task");
 
 // ===== TASK 10.4: Form Handling =====
-const form = document.getElementById("contact-form");
-const nameInput = document.getElementById("name");
-const emailInput = document.getElementById("email");
+const form10 = document.getElementById("contact-form");
+const nameInput10 = document.getElementById("name");
+const emailInput10 = document.getElementById("email");
 
 function showError(input, message) {
     input.classList.add("error");
