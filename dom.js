@@ -390,5 +390,86 @@ newTaskInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") addTask();
 });
 
-console.log("===== WEEK 5 - ALL TASKS COMPLETE! =====");
 console.log("Test: Click Child box, click Tasks to toggle, click Delete, add new task");
+
+// ===== TASK 10.4: Form Handling =====
+const form = document.getElementById("contact-form");
+const nameInput = document.getElementById("name");
+const emailInput = document.getElementById("email");
+
+function showError(input, message) {
+    input.classList.add("error");
+    input.style.borderColor = "red";
+    let errorEl = input.nextElementSibling;
+    if (!errorEl || !errorEl.classList.contains("error-msg")) {
+        errorEl = document.createElement("span");
+        errorEl.className = "error-msg";
+        errorEl.style.color = "red";
+        errorEl.style.fontSize = "12px";
+        input.parentNode.insertBefore(errorEl, input.nextSibling);
+    }
+    errorEl.textContent = message;
+    console.log(`Task 10.4 - Error on ${input.id}: ${message}`);
+}
+
+function clearError(input) {
+    input.classList.remove("error");
+    input.style.borderColor = "green";
+    let errorEl = input.nextElementSibling;
+    if (errorEl && errorEl.classList.contains("error-msg")) {
+        errorEl.textContent = "";
+    }
+    console.log(`Task 10.4 - Cleared error on ${input.id}`);
+}
+
+function showSuccess(message) {
+    console.log(`Task 10.4 - SUCCESS: ${message}`);
+    alert(message);
+}
+
+function isValid(data) {
+    return data.name && data.name.length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email);
+}
+
+if (nameInput && emailInput && form) {
+    // Real-time validation
+    nameInput.addEventListener("input", function(event) {
+        const value = event.target.value;
+        if (value.length < 2) {
+            showError(nameInput, "Name must be at least 2 characters");
+        } else {
+            clearError(nameInput);
+        }
+    });
+
+    emailInput.addEventListener("input", function(event) {
+        const value = event.target.value;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+            showError(emailInput, "Please enter a valid email");
+        } else {
+            clearError(emailInput);
+        }
+    });
+
+    // Form submission
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData);
+        console.log("Task 10.4 - Form data:", data);
+        
+        if (isValid(data)) {
+            showSuccess("Form submitted successfully!");
+            form.reset();
+            // Clear borders
+            nameInput.style.borderColor = "";
+            emailInput.style.borderColor = "";
+        } else {
+            console.log("Task 10.4 - Form invalid, not submitting");
+        }
+    });
+    
+    console.log("Task 10.4 - Complete form validation added");
+}
+
