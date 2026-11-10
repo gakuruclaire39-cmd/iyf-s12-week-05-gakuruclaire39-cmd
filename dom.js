@@ -169,9 +169,8 @@ console.log("after sibling");
 // const footer = document.querySelector("footer");
 // footer.remove(); // would remove footer - skip for demo
 
-const nav = document.querySelector("nav");
-console.log("Exercise 2 - nav exists for removal demo:", nav);
-
+const navForRemoval = document.querySelector("nav");
+console.log("Exercise 2 - nav exists for removal demo:", navForRemoval);
 // Clear demo - we won't actually clear article or you'll lose content
 console.log("Exercise 2 - removeChild / innerHTML='' concept logged");
 
